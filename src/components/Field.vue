@@ -1,7 +1,7 @@
 <template>
-  <div class="field" @click="fieldClickHandler">
-    <div class="cell cross"></div>
-    <div class="cell zero"></div>
+  <div class="field" @click.stop="fieldClickHandler($event)">
+    <div class="cell"></div>
+    <div class="cell"></div>
     <div class="cell"></div>
     <div class="cell"></div>
     <div class="cell"></div>
@@ -14,15 +14,22 @@
 
 <script>
   import Vue from 'vue'
+  import { SymbolType } from '@/types'
 
   export default Vue.extend({
     name: 'Field',
     props: {},
     data: () => ({}),
+    computed: {
+      symbolType() {
+        return this.$store.getters.currentSymbolType
+      }
+    },
     methods: {
       fieldClickHandler(evt) {
-        if (!evt.target.classList.contains('cell') || evt.target.classList.contains('cross')) return
-        evt.target.classList.add('cross')
+        const { classList } = evt.target
+        if (!this.symbolType || classList.contains(SymbolType.Cross) || classList.contains(SymbolType.Zero)) return
+        classList.add(this.symbolType)
       }
     }
   })
@@ -46,11 +53,6 @@
     position: relative;
     background-color: cadetblue;
 
-    &::before,
-    &::after {
-      opacity: 0;
-    }
-
     &.cross {
       &::before,
       &::after {
@@ -65,8 +67,7 @@
         left: 50%;
         margin-top: -40%;
         margin-left: -5px;
-        opacity: 1;
-        transition: opacity ease 0.3s;
+        animation: fade-in 0.3s forwards;
       }
       &::before {
         transform: rotate(-45deg);
@@ -88,8 +89,16 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        animation: fade-in 0.3s forwards;
+      }
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+      100% {
         opacity: 1;
-        transition: opacity ease 0.3s;
       }
     }
   }

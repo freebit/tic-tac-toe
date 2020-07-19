@@ -15,6 +15,7 @@ module.exports = {
     ]
   },
   devServer: {
+    host: '0.0.0.0',
     overlay: {
       warnings: true,
       errors: true
