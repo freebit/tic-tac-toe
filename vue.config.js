@@ -16,6 +16,8 @@ module.exports = {
   },
   devServer: {
     host: '0.0.0.0',
+    https: false,
+    hot: true,
     overlay: {
       warnings: true,
       errors: true
