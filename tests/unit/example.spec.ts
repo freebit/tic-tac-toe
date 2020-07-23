@@ -1,12 +1,12 @@
 import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import TestRenderFunction from '../../src/components/TestRenderFunction.vue'
 
 describe('HelloWorld.vue', () => {
   it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
+    const level = 1
+    const wrapper = shallowMount(TestRenderFunction, {
+      propsData: { level }
     })
-    expect(wrapper.text()).toMatch(msg)
+    expect(wrapper.text()).toMatch(`h${level}`)
   })
 })

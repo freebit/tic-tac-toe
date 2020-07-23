@@ -30,6 +30,7 @@
         const { classList } = evt.target
         if (!this.symbolType || classList.contains(SymbolType.Cross) || classList.contains(SymbolType.Zero)) return
         classList.add(this.symbolType)
+        // this.$emit('select-symbol')
       }
     }
   })
@@ -40,9 +41,9 @@
   .field {
     display: grid;
     position: relative;
-    width: 100vh;
-    height: 100vh;
-    margin: 0 auto;
+    width: calc(100vh - #{$header-height});
+    height: calc(100vh - #{$header-height});
+    // margin: 0 auto;
 
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;

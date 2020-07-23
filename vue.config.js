@@ -1,4 +1,5 @@
-const webpackbar = require('webpackbar');
+const webpackbar = require('webpackbar')
+const path = require('path')
 module.exports = {
   lintOnSave: true,
   css: {
@@ -10,9 +11,7 @@ module.exports = {
     }
   },
   configureWebpack: {
-    plugins: [
-      new webpackbar()
-    ]
+    plugins: [new webpackbar()]
   },
   devServer: {
     host: '0.0.0.0',
@@ -23,4 +22,4 @@ module.exports = {
       errors: true
     }
   }
-};
+}
