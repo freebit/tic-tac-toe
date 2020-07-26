@@ -19,12 +19,8 @@
 <script lang="ts">
   import Vue from 'vue'
   import { mapGetters } from 'vuex'
-  import io from 'socket.io-client'
   import Field from '../components/Field.vue'
   import { SymbolType } from '@/types'
-  import { uuid } from '../utils/'
-
-  let socket: SocketIOClient.Socket
 
   export default Vue.extend({
     name: 'Game',
@@ -34,29 +30,9 @@
     data: () => ({
       playerUid: ''
     }),
-    created() {
-      this.playerUid = uuid()
-      socket = io(`https://localhost:3000?player=${this.playerUid}`, {
-        path: '/ws'
-      })
-      socket.on('game-start', () => {
-        this.$store.dispatch('START_GAME')
-      })
-      socket.on('symbol-selected', (symbol: SymbolType) => {
-        if (!this.isSymbolSelected) {
-          // выбираем для клиента противоположный символ
-          symbol = symbol === SymbolType.Cross ? SymbolType.Zero : SymbolType.Cross
-          this.$store.commit('SET_SYMBOL_TYPE', symbol)
-        }
-      })
-      socket.on('game-stop', () => {
-        this.$store.dispatch('STOP_GAME')
-        window.location.reload()
-      })
-    },
+    // created() {},
     mounted() {
-      socket.emit('player-init', { player: this.playerUid })
-      console.log('player-init - ok')
+      this.$store.dispatch('PLAYER_INIT')
     },
     computed: {
       ...mapGetters(['gameIsStarted']),
@@ -75,9 +51,8 @@
     },
 
     methods: {
-      symbolSelect(symbolType: SymbolType) {
-        this.$store.commit('SET_SYMBOL_TYPE', symbolType)
-        socket.emit('symbol-selected', symbolType)
+      symbolSelect(symbol: SymbolType) {
+        this.$store.dispatch('SYMBOL_SELECT', symbol)
       }
     }
   })

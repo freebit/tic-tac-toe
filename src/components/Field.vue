@@ -1,14 +1,14 @@
 <template>
-  <div class="field" @click.stop="fieldClickHandler($event)">
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
+  <div class="field" @click.stop="fieldClickHandler">
+    <div class="cell" data-id="0"></div>
+    <div class="cell" data-id="1"></div>
+    <div class="cell" data-id="2"></div>
+    <div class="cell" data-id="3"></div>
+    <div class="cell" data-id="4"></div>
+    <div class="cell" data-id="5"></div>
+    <div class="cell" data-id="6"></div>
+    <div class="cell" data-id="7"></div>
+    <div class="cell" data-id="8"></div>
   </div>
 </template>
 
@@ -28,9 +28,17 @@
     methods: {
       fieldClickHandler(evt) {
         const { classList } = evt.target
+        const position = evt.target.getAttribute('data-id')
         if (!this.symbolType || classList.contains(SymbolType.Cross) || classList.contains(SymbolType.Zero)) return
         classList.add(this.symbolType)
         // this.$emit('select-symbol')
+        this.$store.dispatch('GAME_MOVE', { position, symbol: this.symbolType })
+      }
+    },
+    watch: {
+      '$store.getters.gameMove'({ position, symbol }) {
+        console.log('MOVE WATCH -', position, symbol)
+        this.$el.querySelector(`[data-id="${position}"]`).classList.add(symbol)
       }
     }
   })
