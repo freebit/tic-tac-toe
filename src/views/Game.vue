@@ -1,6 +1,6 @@
 <template>
   <div class="game">
-    <Field />
+    <Field :disabled="disabled" />
     <div class="game__state">
       <span v-if="!gameIsStarted">Ждем подключения минимум двух игроков</span>
       <span v-else-if="!isSymbolSelected">Теперь выберете символ!</span>
@@ -28,7 +28,7 @@
       Field
     },
     data: () => ({
-      playerUid: ''
+      disabled: false
     }),
     // created() {},
     mounted() {
@@ -53,6 +53,11 @@
     methods: {
       symbolSelect(symbol: SymbolType) {
         this.$store.dispatch('SYMBOL_SELECT', symbol)
+      }
+    },
+    watch: {
+      '$store.getters.isWinning'(vector) {
+        vector && (this.disabled = false)
       }
     }
   })

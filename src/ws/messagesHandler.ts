@@ -20,7 +20,7 @@ export default {
     console.log('* ws server game-move - ', position, symbol)
   },
   'game-won'({ vector }) {
-    console.log('* ws server Победа!!! - ', vector)
+    store.commit('CHANGE_WINNING', vector)
   },
   'game-stop'() {
     store.dispatch('STOP_GAME')

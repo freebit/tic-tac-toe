@@ -1,23 +1,7 @@
 const chalk = require('chalk')
 
 const gameState = {
-  field: [
-    -1, -1, -1,
-    -1, -1, -1,
-    -1, -1, -1
-  ],
-  winning: {
-    '0-3-6':'100100100',
-    '1-4-7':'010010010',
-    '2-5-8':'001001001',
-
-    '0-1-2':'111000000',
-    '3-4-5':'000111000',
-    '6-7-8':'000000111',
-
-    '0-4-8':'100010001',
-    '2-4-6':'001010100'
-  },
+  field: Array(9).fill(null),
   players: {}
 }
 
@@ -35,17 +19,28 @@ function map() {
   })
   return cortege
 }
-function checkField([byOne, byZero]) {
-  const winning = Object.values(this.winning)
-  const vectors = Object.keys(this.winning)
-  console.log('checkfield -', byOne, byZero, this.winning)
-  const byOneKey = winning.indexOf(byOne)
-  const byZeroKey = winning.indexOf(byZero)
-  return vectors[byOneKey] || vectors[byZeroKey]
+function checkWinning() {
+  const winning = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ]
+  for (let i = 0; i < winning.length; i++) {
+    const [a, b, c] = winning[i]
+    if (this.field[a] && this.field[a] === this.field[b] && this.field[a] === this.field[c]) {
+      return winning[i]
+    }
+  }
+  return null
 }
 
 function clear() {
-  return this.field.forEach((el, i) => this.field[i] = -1)
+  return this.field.forEach((el, i) => this.field[i] = null)
 }
 
 module.exports = (httpServer, config) => {
@@ -60,10 +55,10 @@ module.exports = (httpServer, config) => {
     return {
       symbol: '',
       onMove({ position, symbol }) {
-        gameState.field[+position] = (symbol === 'cross' ? 1 : 0)
-        const winningVector = checkField.call(gameState, map.call(gameState))
+        gameState.field[+position] = symbol
+        const winningVector = checkWinning.call(gameState)
         socket.emit('server-message', { message: 'game-move', data: { position, symbol }})
-        // console.log('server move -', position, symbol, gameState.field)
+        console.log('server move -', gameState.field)
 
         if(winningVector) {
           socket.emit('server-message', { message: 'game-won', data: { vector: winningVector }})
@@ -79,7 +74,6 @@ module.exports = (httpServer, config) => {
         const playersCount = Object.keys(gameState.players).length
         console.log(chalk.bgBlue.white(` * WS player init ${player}`))
         console.log('players -', playersCount)
-
         if (playersCount === 2) {
           socket.emit('server-message', { message: 'game-start' })
         }

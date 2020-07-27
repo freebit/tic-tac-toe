@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <header>
-      <router-link to="/" exact>Главная</router-link>
-      <router-link to="/tic-tac-toe">Игра</router-link>
+    <header class="header">
+      <div class="header__panel">
+        <router-link to="/tic-tac-toe">Игра</router-link>
+        <button @click="reloadPage" class="header__button">Сначала <span>&#10226;</span></button>
+      </div>
     </header>
     <transition name="fade">
       <router-view></router-view>
@@ -12,13 +14,25 @@
 
 <script lang="ts">
   import Vue from 'vue'
+  // import MyInput from '@/components/MyInput.vue'
   export default Vue.extend({
-    name: 'App'
+    name: 'App',
+    components: {
+      // MyInput
+    },
+    data: () => ({
+      myInput: ''
+    }),
+    methods: {
+      reloadPage() {
+        window.location.reload()
+      }
+    }
   })
 </script>
 
 <style lang="scss">
-  header {
+  .header {
     display: flex;
     position: relative;
     height: $header-height;
@@ -35,6 +49,13 @@
       &.router-link-active {
         text-decoration: underline;
       }
+    }
+
+    &__panel {
+      display: flex;
+      position: relative;
+      min-width: calc(100vh - #{$header-height});
+      justify-content: space-around;
     }
   }
 </style>

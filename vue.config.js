@@ -16,6 +16,9 @@ module.exports = {
   devServer: {
     host: '0.0.0.0',
     https: false,
+    socket: 'socket',
+    sockHost: 'https://localhost:3000',
+    sockPath: '/ws',
     hot: true,
     overlay: {
       warnings: true,

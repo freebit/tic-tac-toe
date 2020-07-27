@@ -10,7 +10,8 @@ const state: State = {
   playerUid: null,
   gameStarted: false,
   symbolType: null,
-  move: null
+  move: null,
+  winning: null
 }
 
 export default new Vuex.Store({
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     },
     GAME_MOVE(state: State, { position, symbol }) {
       state.move = { position, symbol }
+    },
+    CHANGE_WINNING(state: State, vector) {
+      state.winning = vector
     }
   },
   actions: {
@@ -32,6 +36,7 @@ export default new Vuex.Store({
       socket.emit('player-init', { player: playerUid })
     },
     START_GAME({ commit }) {
+      // commit('CHANGE_WINNING -', null)
       commit('SET_GAME_STARTED', true)
     },
     STOP_GAME({ commit }) {
@@ -42,14 +47,18 @@ export default new Vuex.Store({
       commit('SET_SYMBOL_TYPE', symbol)
       socket.emit('symbol-selected', symbol)
     },
-    GAME_MOVE(state, { position, symbol }) {
+    GAME_MOVE(store, { position, symbol }) {
       socket.emit('game-move', { position, symbol })
+    },
+    GAME_WON({ commit }, { vector }) {
+      commit('CHANGE_WINNING', vector)
     }
   },
   getters: {
     gameIsStarted: (state: State) => state.gameStarted,
     currentSymbolType: (state: State) => state.symbolType,
-    gameMove: (state: State) => state.move
+    gameMove: (state: State) => state.move,
+    isWinning: (state: State) => state.winning
   },
   modules: {}
 })
