@@ -57,7 +57,7 @@
     },
     watch: {
       '$store.getters.isWinning'(vector) {
-        vector && (this.disabled = false)
+        vector && (this.disabled = true)
       }
     }
   })

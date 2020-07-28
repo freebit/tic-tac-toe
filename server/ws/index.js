@@ -40,6 +40,7 @@ function checkWinning() {
 }
 
 function clear() {
+  this.players = {}
   return this.field.forEach((el, i) => this.field[i] = null)
 }
 
@@ -80,7 +81,7 @@ module.exports = (httpServer, config) => {
       },
       onDisconnect() {
         clear.call(gameState)
-        delete gameState.players[player]
+        // delete gameState.players[player]
         const playersCount = Object.keys(gameState.players).length
         if (playersCount !== 2) {
           socket.emit('server-message', { message: 'game-stop' })
